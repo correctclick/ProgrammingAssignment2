@@ -23,7 +23,6 @@ makeCacheMatrix <- function(x = matrix()) {
 ## inverse from cache if present, if not computes one, caches it and returns.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
         inv <- x$getInverse()
         if(!is.null(inv)) {
                 message("getting cached data")
@@ -34,3 +33,37 @@ cacheSolve <- function(x, ...) {
         x$setInverse(inv)
         inv
 }
+
+## Test Cases
+
+## Create a simple Matrix
+mat <- matrix(1:4,2,2)
+mat
+## Call makeCacheMatrix to get the "Special matrix
+matrixSp <- makeCacheMatrix(mat)
+
+## Call cacheSolve to get the inverse first time
+inverseMatrix <- cacheSolve(matrixSp)
+inverseMatrix
+
+## Test by multiplying simple matrix & it's inverse to ensure it returns an identity matrix
+mat %*% inverseMatrix
+
+## Now call cacheSolve again to test whether it returns from cache
+inverseMatrix <- cacheSolve(matrixSp)
+inverseMatrix
+
+## Again test by multiplying simple matrix & it's inverse to ensure it returns a unit matrix
+mat %*% inverseMatrix
+
+## Now change the simple matrix & repeat the test
+mat <-  matrix(11:14,2,2)
+mat
+matrixSp <- makeCacheMatrix(mat)
+inverseMatrix <- cacheSolve(matrixSp) ## It should NOT return from cache
+inverseMatrix
+
+## Now call again and it should return from cache
+inverseMatrix <- cacheSolve(matrixSp) 
+inverseMatrix
+
